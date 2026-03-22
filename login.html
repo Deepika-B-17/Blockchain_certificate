@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Access - BlockCert</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .login-container {
+            max-width: 450px;
+            margin: 60px auto;
+        }
+
+        .auth-card {
+            padding: 40px;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-sec);
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .form-section {
+            display: none;
+        }
+
+        .form-section.active {
+            display: block;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            background: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: var(--text-sec);
+        }
+
+        .role-btn.active {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+        }
+
+        #qrCodeContainer {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px auto;
+            display: inline-block;
+        }
+
+        #qrCodeContainer canvas,
+        #qrCodeContainer img {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar container"></nav>
+    <div class="container login-container">
+        <div class="card auth-card">
+            <!-- Auth Header -->
+            <div id="authHeader" style="text-align: center; margin-bottom: 20px;">
+                <h2 id="authTitle">Welcome Back</h2>
+                <p id="authSubtitle" style="color: var(--text-sec);">Enter your credentials to access BlockCert</p>
+            </div>
+
+            <!-- Tabs (Login/Register) -->
+            <div id="authTabs" class="auth-tabs">
+                <div id="tabLogin" class="auth-tab active" onclick="switchAuthMode('login')">Sign In</div>
+                <div id="tabRegister" class="auth-tab" onclick="switchAuthMode('register')">Sign Up</div>
+            </div>
+
+            <!-- Login Section -->
+            <div id="loginSection" class="form-section active">
+                <form id="loginForm">
+                    <input type="email" id="loginEmail" placeholder="Email Address" required>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Login</button>
+                    <p id="loginError" style="color: var(--error); margin-top: 10px; display: none;"></p>
+                </form>
+            </div>
+
+            <!-- Registration Section -->
+            <div id="registerSection" class="form-section">
+                <div class="role-selector">
+                    <button id="btnRoleInstitution" class="role-btn active"
+                        onclick="setRole('institution')">Institution</button>
+                    <button id="btnRoleStudent" class="role-btn" onclick="setRole('student')">Student</button>
+                </div>
+
+                <form id="registerForm">
+                    <input type="hidden" id="regRole" value="institution">
+
+                    <div id="institutionFields">
+                        <input type="text" id="instName" placeholder="Institution Name" required>
+                        <input type="text" id="regId" placeholder="Registration / Accreditation Number" required>
+                    </div>
+
+                    <div id="studentFields" style="display: none;">
+                        <input type="text" id="stuName" placeholder="Full Name">
+                        <input type="text" id="stuId" placeholder="Unique Student Identifier">
+                    </div>
+
+                    <input type="email" id="regEmail" placeholder="Official Email Address" required>
+                    <input type="password" id="regPassword" placeholder="Password (Secure)" required>
+
+                    <button type="button" id="regSubmitBtn" class="btn btn-primary" style="width: 100%;">Register &
+                        Setup 2FA</button>
+                    <p id="regError" style="color: var(--error); margin-top: 10px; display: none;"></p>
+                </form>
+            </div>
+
+            <!-- 2FA Verification Section -->
+            <div id="twoFASection" class="form-section" style="text-align: center;">
+                <i class="fas fa-shield-alt" style="font-size: 3rem; color: var(--primary); margin-bottom: 20px;"></i>
+                <h3>Two-Factor Authentication</h3>
+                <p style="color: var(--text-sec); margin-bottom: 20px;">Enter the 6-digit code from your authenticator
+                    app.</p>
+
+                <form id="twoFAForm">
+                    <input type="text" id="otpCode" placeholder="000000" maxlength="6"
+                        style="font-size: 2rem; text-align: center; letter-spacing: 10px;" required>
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Verify &
+                        Access</button>
+                </form>
+                <p id="otpError" style="color: var(--error); margin-top: 10px; display: none;"></p>
+            </div>
+
+            <!-- 2FA Setup Section (After Registration) -->
+            <div id="setup2FASection" class="form-section" style="text-align: center;">
+                <h3>Step 2: Secure Your Account</h3>
+                <p style="color: var(--text-sec);">Scan this QR Code with Google Authenticator or Authy.</p>
+
+                <div id="qrCodeContainer"></div>
+
+                <p style="font-size: 0.8rem; margin: 10px 0;">Or enter this code manually:</p>
+                <code id="manualSecret"
+                    style="background: rgba(0,0,0,0.05); padding: 5px 10px; border-radius: 4px; font-weight: bold;"></code>
+
+                <button type="button" onclick="clearPendingReg()" class="btn btn-primary"
+                    style="width: 100%; margin-top: 20px;">I've Scanned It - Go to Login</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="js/themeToggle.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

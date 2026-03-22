@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockCert - Decentralized Certificate Verification</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero {
+            padding: 120px 0 80px;
+            text-align: left;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-image {
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-image i {
+            font-size: 15rem;
+            color: var(--primary);
+            filter: drop-shadow(0 0 30px rgba(79, 70, 229, 0.3));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .cta-section {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 80px 40px;
+            border-radius: 24px;
+            text-align: center;
+            margin: 80px 0;
+            box-shadow: 0 20px 40px rgba(79, 70, 229, 0.3);
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section .btn {
+            background: white;
+            color: var(--primary);
+            margin-top: 20px;
+        }
+
+        @media (max-width: 900px) {
+            .hero {
+                grid-template-columns: 1fr;
+                text-align: center;
+                padding: 80px 0;
+            }
+
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar">
+            <div class="logo">BlockCert</div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html">Home</a>
+                <a href="verify.html">Verify</a>
+                <!-- Auth buttons injected by JS -->
+            </div>
+            <div class="auth-box" id="authBox">
+                <!-- Login/Dashboard button -->
+            </div>
+            <button id="themeToggle" class="theme-toggle">🌙</button>
+        </nav>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Verify with Confidence.</h1>
+                <p>The next generation of academic integrity. Secure, immutable, and instantly verifiable certificates
+                    powered by blockchain technology.</p>
+                <div style="display: flex; gap: 20px;">
+                    <a href="verify.html" class="btn btn-primary">Verify Now</a>
+                    <a href="login.html" class="btn btn-outline">For Institutions</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <i class="fas fa-shield-halved"></i>
+            </div>
+        </section>
+
+        <section class="features">
+            <div style="text-align: center; margin-bottom: 50px;">
+                <h2 style="font-size: 2.5rem;">Why BlockCert?</h2>
+                <p style="color: var(--text-sec);">Eliminating fraud through decentralized proof of achievement.</p>
+            </div>
+            <div class="features-grid">
+                <div class="card feature-card">
+                    <i class="fas fa-cube"></i>
+                    <h3>Immutable Ledger</h3>
+                    <p>Once issued, a certificate's hash is stored on the blockchain, making it impossible to alter or
+                        forge.</p>
+                </div>
+                <div class="card feature-card">
+                    <i class="fas fa-bolt"></i>
+                    <h3>Instant Verification</h3>
+                    <p>Third-party verifiers can confirm the authenticity of any document in seconds without contacting
+                        the issuer.</p>
+                </div>
+                <div class="card feature-card">
+                    <i class="fas fa-wallet"></i>
+                    <h3>Student Wallet</h3>
+                    <p>Students own their credentials forever. Access and share your achievements from a single, secure
+                        dashboard.</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="cta-section">
+            <h2>Ready to Join the Future?</h2>
+            <p>Join hundreds of institutions securing their academic legacy on the blockchain.</p>
+            <a href="login.html" class="btn">Get Started Today</a>
+        </div>
+
+        <footer style="text-align: center; padding: 40px; color: var(--text-sec); font-size: 0.9rem;">
+            <p>&copy; 2026 BlockCert Verification Platform. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="js/themeToggle.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Adjust navbar for landing page
+        const authBox = document.getElementById('authBox');
+        const token = localStorage.getItem('access_token');
+
+        if (token) {
+            authBox.innerHTML = `
+                <a href="dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+                <button onclick="logout()" class="btn btn-outline" style="margin-left:10px;">Logout</button>
+            `;
+        } else {
+            authBox.innerHTML = `
+                <a href="login.html" class="btn btn-primary">Sign In</a>
+            `;
+        }
+    </script>
+</body>
+
+</html>

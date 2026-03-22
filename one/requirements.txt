@@ -1,0 +1,13 @@
+fastapi
+uvicorn
+web3
+pyjwt
+qrcode
+Pillow
+python-multipart
+mnemonic
+python-dotenv
+bcrypt
+pyotp
+groq
+requests

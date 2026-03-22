@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Certificate - BlockCert</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar"></nav>
+
+        <section class="hero">
+            <h1>Verify Authenticity</h1>
+            <p>Enter the Certificate ID below to verify its status against the blockchain.</p>
+
+            <div style="max-width: 500px; margin: 0 auto;">
+                <input type="text" id="certIdInput" placeholder="Enter Certificate ID (e.g. 8f4b2...)"
+                    style="font-size: 1.2rem; text-align: center;">
+                <button id="verifyBtn" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Verify
+                    Now</button>
+            </div>
+        </section>
+
+        <div id="resultContainer" class="container" style="max-width: 600px; display: none;">
+            <div class="card" style="text-align: center;">
+                <div id="statusIcon" style="font-size: 4rem; margin-bottom: 20px;"></div>
+                <h2 id="statusText"></h2>
+
+                <div id="certDetails" style="text-align: left; margin-top: 20px; display: none;">
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid var(--border-color);">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px;">
+                        <div>
+                            <p style="font-size: 0.8rem; color: var(--text-sec);">Student Name</p>
+                            <p><strong id="vDetailName"></strong></p>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.8rem; color: var(--text-sec);">Course</p>
+                            <p><strong id="vDetailCourse"></strong></p>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.8rem; color: var(--text-sec);">Issuer</p>
+                            <p id="vDetailIssuer"></p>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.8rem; color: var(--text-sec);">Issue Date</p>
+                            <p id="vDetailDate"></p>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: rgba(0,0,0,0.03); padding: 15px; border-radius: 8px; border-left: 4px solid var(--success);">
+                        <p style="font-weight: bold; color: var(--success); margin-bottom: 5px;">Blockchain Proof</p>
+                        <p style="font-size: 0.85rem;"><strong>Transaction:</strong> <span id="vDetailTx"
+                                style="word-break: break-all; font-family: monospace;"></span></p>
+                        <p style="font-size: 0.85rem;"><strong>Block Number:</strong> <span id="vDetailBlock"></span>
+                        </p>
+                        <div style="margin: 10px 0; padding: 10px 0; border-top: 1px dashed var(--border-color); border-bottom: 1px dashed var(--border-color);">
+                            <p style="font-size: 0.85rem;"><strong>IPFS CID:</strong> <span id="vDetailCid"
+                                    style="word-break: break-all; font-family: monospace; color: var(--primary);"></span></p>
+                            <p style="font-size: 0.85rem;"><strong>IPFS Link:</strong> <a id="vDetailIpfs" href="#" target="_blank"
+                                    style="font-weight: bold; text-decoration: underline;">View Raw JSON on IPFS</a></p>
+                        </div>
+                        <p style="font-size: 0.85rem;"><strong>Blockchain Status:</strong> <span id="vDetailStatus"
+                                class="badge"
+                                style="background:var(--success); color:white; padding: 2px 5px; border-radius: 4px;"></span>
+                        </p>
+                        <p style="font-size: 0.75rem; color: var(--text-sec); margin-top: 10px;">Security Hash: <span
+                                id="vDetailHash" style="word-break: break-all;"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/themeToggle.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        const verifyBtn = document.getElementById('verifyBtn');
+        const certIdInput = document.getElementById('certIdInput');
+        const resultContainer = document.getElementById('resultContainer');
+        const statusIcon = document.getElementById('statusIcon');
+        const statusText = document.getElementById('statusText');
+        const certDetails = document.getElementById('certDetails');
+
+        // Check URL params
+        const urlParams = new URLSearchParams(window.location.search);
+        const idParam = urlParams.get('id');
+        if (idParam) {
+            certIdInput.value = idParam;
+            verifyCert(idParam);
+        }
+
+        verifyBtn.addEventListener('click', () => {
+            verifyCert(certIdInput.value.trim());
+        });
+
+        async function verifyCert(id) {
+            if (!id) return;
+
+            statusText.textContent = "Checking Blockchain Ledger...";
+            statusIcon.textContent = "⏳";
+            resultContainer.style.display = "block";
+            certDetails.style.display = "none";
+
+            try {
+                // Encode the ID or Tx Hash for the URL
+                const response = await fetch(`http://localhost:8000/certificate/verify/${encodeURIComponent(id)}`);
+                const data = await response.json();
+
+                if (response.ok && data.valid) {
+                    statusIcon.textContent = "✔";
+                    statusIcon.style.color = "var(--success)";
+                    statusText.textContent = "AUTHENTIC CERTIFICATE";
+                    statusText.style.color = "var(--success)";
+
+                    document.getElementById('vDetailName').textContent = data.data.student_name;
+                    document.getElementById('vDetailCourse').textContent = data.data.course;
+                    document.getElementById('vDetailIssuer').textContent = data.data.issuer;
+                    document.getElementById('vDetailDate').textContent = data.data.date;
+
+                    // Blockchain data
+                    document.getElementById('vDetailTx').textContent = data.blockchain.tx_hash;
+                    document.getElementById('vDetailBlock').textContent = data.blockchain.block;
+                    document.getElementById('vDetailStatus').textContent = data.blockchain.status;
+                    document.getElementById('vDetailHash').textContent = data.hash;
+
+                    const cidEl = document.getElementById('vDetailCid');
+                    const ipfsEl = document.getElementById('vDetailIpfs');
+                    if (cidEl) cidEl.textContent = data.cid || "Not Available (Legacy)";
+                    if (ipfsEl) {
+                        ipfsEl.href = data.ipfs_url || "#";
+                        ipfsEl.style.display = data.ipfs_url ? "inline" : "none";
+                    }
+
+                    certDetails.style.display = "block";
+                } else {
+                    throw new Error("Invalid");
+                }
+            } catch (err) {
+                statusIcon.textContent = "✖";
+                statusIcon.style.color = "var(--error)";
+                statusText.textContent = "UNVERIFIED: Not found on Ledger";
+                statusText.style.color = "var(--error)";
+            }
+        }
+    </script>
+</body>
+
+</html>

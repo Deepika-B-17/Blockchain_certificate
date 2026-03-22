@@ -1,0 +1,20 @@
+{
+    "inst@test.com": {
+        "password": "$2b$12$KmFkuKzPXyMKnmWrMfEl1eR0I2HqvC5MI4BAzCH2wVCTbFtTSs6Lq",
+        "role": "institution",
+        "name": "Test Inst",
+        "reg_id": "123456",
+        "student_id": "",
+        "totp_secret": "NGNLKLZ5BQTM6R2ALGH3HVP3W26VUKL2",
+        "2fa_enabled": true
+    },
+    "deepikab@gmail.com": {
+        "password": "$2b$12$P7XL4RD41pU68ylEZvy.1eas2lNgv5i479Lb3Mdpco7eAD5d2o/G6",
+        "role": "institution",
+        "name": "abd",
+        "reg_id": "12345",
+        "student_id": "",
+        "totp_secret": "OUGE7OGL6JZ2UXL56QSFX77D243UMO4Y",
+        "2fa_enabled": true
+    }
+}

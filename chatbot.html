@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Support - BlockCert</title>
+    <link rel="stylesheet" href="css/theme.css">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .chat-container {
+            max-width: 800px;
+            margin: 40px auto;
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-window {
+            flex-grow: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar"></nav>
+
+        <div class="chat-container">
+            <div class="chat-window" id="chatWindow">
+                <div class="message bot-msg">
+                    Hello! I'm your BlockCert assistant. Ask me about certificates, verification, or how to use the
+                    platform.
+                </div>
+            </div>
+
+            <form id="chatForm" class="input-area">
+                <div class="input-group">
+                    <label for="imageInput" class="upload-btn">
+                        📷
+                        <input type="file" id="imageInput" accept="image/*" style="display: none;">
+                    </label>
+                    <input type="text" id="userInput" placeholder="Type your question..." autocomplete="off">
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </div>
+                <div id="imagePreview" style="display: none; padding: 5px; font-size: 0.9em; color: var(--text-sec);">
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/themeToggle.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chatbot.js"></script>
+</body>
+
+</html>

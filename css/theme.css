@@ -1,0 +1,47 @@
+:root {
+    /* Light Mode (Vibrant) */
+    --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    --card-bg: rgba(255, 255, 255, 0.9);
+    --card-border: rgba(255, 255, 255, 0.5);
+    --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+    --text-main: #1e1b4b;
+    --text-sec: #475569;
+
+    /* Vibrant Indigo-Purple Palette */
+    --primary: #4f46e5;
+    --primary-gradient: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    --secondary: #06b6d4;
+    --accent: #f472b6;
+
+    --success: #10b981;
+    --error: #ef4444;
+}
+
+[data-theme="dark"] {
+    /* Dark Mode (Deep Space) */
+    --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --card-border: rgba(255, 255, 255, 0.1);
+    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+    --text-main: #f8fafc;
+    --text-sec: #cbd5e1;
+
+    --primary: #6366f1;
+    --primary-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+    --secondary: #22d3ee;
+    --accent: #f472b6;
+
+    --success: #34d399;
+    --error: #f87171;
+}
+
+body {
+    background: var(--bg-gradient);
+    background-attachment: fixed;
+    /* Keeps gradient verifying */
+    color: var(--text-main);
+    transition: color 0.3s;
+    min-height: 100vh;
+}
